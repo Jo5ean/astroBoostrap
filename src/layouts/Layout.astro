@@ -5,7 +5,6 @@ interface Props {
 
 const { title } = Astro.props;
 ---
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -13,11 +12,300 @@ const { title } = Astro.props;
 		<meta name="description" content="Astro description">
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<link rel="stylesheet" href="https://www.ucasal.edu.ar/landing/img/img-test/estilos/estilo-test.css" />
 	</head>
 	<body>
 		<slot />
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+		<script>
+			var input = document.querySelector("#phone");
+			var iti = window.intlTelInput(input);
+			iti.setCountry("ar");
+			input.addEventListener("countrychange", function() {
+			  var countryData = iti.getSelectedCountryData();
+			  document.getElementById("phone").value = countryData.dialCode;
+			  document.getElementById("codigo_pais").innerHTML = countryData.dialCode;
+			});
+		
+			var countryData = iti.getSelectedCountryData();
+			document.getElementById("phone").value = countryData.dialCode;
+			document.getElementById("codigo_pais").innerHTML = countryData.dialCode;
+		
+			const scrollToTop = () => {
+			  const c = document.documentElement.scrollTop || document.body.scrollTop;
+			  if (c > 0) {
+				window.scrollTo({
+				  top: 0,
+				  behavior: 'smooth'
+				});
+			  }
+			};
+			/**********************/
+			$(document).ready(function() {
+		
+			  $('.modalidades-mobile').slick({
+				slidesToShow: 1,
+				// adaptiveHeight: '30vh',
+				centerPadding: '10px',
+				autoplay: true,
+				arrows: false,
+			  })
+		
+			  $('.carouselcenter').slick({
+				autoplay: true,
+				centerMode: true,
+				centerPadding: '60px',
+				slidesToShow: 3,
+				responsive: [{
+					breakpoint: 768,
+					settings: {
+					  arrows: false,
+					  centerMode: true,
+					  centerPadding: '40px',
+					  slidesToShow: 1
+					}
+				  },
+				  {
+					breakpoint: 480,
+					settings: {
+					  arrows: false,
+					  centerMode: true,
+					  centerPadding: '10px',
+					  adaptiveHeight: true,
+					  slidesToShow: 1
+					}
+				  }
+				]
+			  });
+		
+		
+			  // funcion asincrona anonima autoejecutable c:
+			  (async () => {
+				const resp = await fetch(
+				  `https://www.ucasal.edu.ar/landing/consultas/getCarrerasJson.php?tipcar=Grado,Pregrado,Intermedio`
+				);
+				const data = await resp.json();
+		
+				//guardo el listado en un almacenamiento local
+				window.localStorage.setItem(
+				  "CarrerasModGeneral",
+				  JSON.stringify(data)
+				);
+			  })();
+		
+		
+			  $('.slick-rectores').slick({
+				slidesToShow: 1,
+				slidesToScroll: 1,
+				touchMove: false,
+				prevArrow: $('.prev'),
+				nextArrow: $('.next'),
+			  });
+		
+			  //carousel
+			  $('.carusel_1').carousel({
+				interval: 1000,
+			  });
+		
+			  $('.carusel_2').carousel({
+				interval: 1000,
+			  })
+			  $('.carusel_3').carousel({
+				interval: 1000,
+			  })
+			  $('.carusel_4').carousel({
+				interval: 1000,
+			  })
+			  $('.carusel_5').carousel({
+				interval: 1000,
+			  })
+			  $('.carusel_7').carousel({
+				interval: 1000,
+			  })
+			  $('.carusel_8').carousel({
+				interval: 1000,
+			  })
+			  $('.carusel_9').carousel({
+				interval: 1000,
+			  })
+			  $('.carusel_10').carousel({
+				interval: 1000,
+			  })
+			});
+		
+		
+			function cambiar_modo() {
+			  var modo = $("#modo").val()
+		
+			  $("#cbx_provincia").empty();
+			  $("#cbx_sede").empty();
+			  $("#cbx_carrera").empty();
+		
+			  $("#cbx_provincia").append(
+				'<option value="" selected>Seleccione Provincia</option>'
+			  );
+		
+			  $("#cbx_sede").append(
+				'<option value="" selected>Seleccione Sede</option>'
+			  );
+		
+			  $("#cbx_carrera").append(
+				'<option value="" selected>Seleccione Carrera</option>'
+			  );
+		
+			  var carrerasArray = JSON.parse(
+				window.localStorage.getItem("CarrerasModGeneral")
+			  );
+			  console.log("Carreras", CarrerasModGeneral);
+		
+			  console.log("Modo", modo);
+		
+			  const carrerasMod = carrerasArray.filter(carreras => carreras.modo == modo);
+		
+			  console.log(carrerasMod);
+		
+			  if (carrerasMod) {
+				//listado de id provincias para poner solo una en el combo
+				var list_prov_id = [];
+				var listaProvincia = [];
+				//ciclo por todas las carreras
+				$.each(carrerasMod, function(i, valorCarrera) {
+				  var provincias = valorCarrera.provincias;
+				  // Saco las provincias sin duplicados. 
+				  $.each(provincias, function(j, valor) {
+					if (!list_prov_id.includes(valor.id_provincia)) {
+					  list_prov_id.push(valor.id_provincia); //agrego al listado para no tomar repetidos
+					  listaProvincia.push(valor); //guardo el objeto provincias para ordenarlo
+					}
+				  })
+				})
+		
+				//Ordeno alfabeticamente las provincias
+				listaProvincia.sort(
+				  (a, b) => a.nombre_provincia.localeCompare(b.nombre_provincia));
+		
+				$.each(listaProvincia, function(j, valor) {
+				  $("#cbx_provincia").append(
+					`<option value="${valor.id_provincia}">${valor.nombre_provincia}</option>`
+				  );
+				})
+		
+				if (listaProvincia.length == 1) {
+				  $("#cbx_provincia").val($("#cbx_provincia option:eq(1)").val());
+				  cambiar_provincia();
+				}
+			  }
+			}
+		
+			function cambiar_provincia() {
+			  var provincia = $("#cbx_provincia").val();
+			  var modo = $("#modo").val();
+			  $("#cbx_sede").empty();
+			  $("#cbx_carrera").empty();
+		
+			  $("#cbx_sede").append(
+				'<option value="" selected>Seleccione Sede</option>'
+			  );
+		
+			  $("#cbx_carrera").append(
+				'<option value="" selected>Seleccione Carrera</option>'
+			  );
+		
+			  var carrerasArray = JSON.parse(
+				window.localStorage.getItem("CarrerasModGeneral")
+			  );
+		
+			  const carrerasMod = carrerasArray.filter(carreras => carreras.modo == modo);
+		
+			  if (carrerasMod) {
+				//listado de id provincias para poner solo una en el combo
+				var list_sedes_id = [];
+				var listaProvincia = [];
+				//ciclo por todas las carreras
+				$.each(carrerasMod, function(i, valorCarrera) {
+				  var provincias = valorCarrera.provincias;
+				  // Saco las provincias sin duplicados. 
+				  $.each(provincias, function(j, valor) {
+					if (!list_sedes_id.includes(valor.id_sede) && valor.id_provincia == provincia) {
+					  list_sedes_id.push(valor.id_sede); //agrego al listado para no tomar repetidos
+					  listaProvincia.push(valor); //guardo el objeto provincias para ordenarlo
+					}
+				  })
+				})
+		
+				//Ordeno alfabeticamente las sedes
+				listaProvincia.sort(
+				  (a, b) => a.nombre_sede.localeCompare(b.nombre_sede));
+		
+		
+				$.each(listaProvincia, function(i, valor) {
+				  $("#cbx_sede").append(
+					`<option value="${valor.id_sede}">${valor.nombre_sede}</option>`
+				  );
+				})
+		
+				if (listaProvincia.length == 1) {
+				  $("#cbx_sede").val($("#cbx_sede option:eq(1)").val());
+				  cambiar_sede();
+				}
+			  }
+			}
+		
+			function cambiar_sede() {
+			  var provincia = $("#cbx_provincia").val();
+			  var modo = $("#modo").val();
+			  var sede = $("#cbx_sede").val();
+		
+			  $("#cbx_carrera").empty();
+		
+			  $("#cbx_carrera").append(
+				'<option value="" selected>Seleccione Carrera</option>'
+			  );
+		
+			  var carrerasArray = JSON.parse(
+				window.localStorage.getItem("CarrerasModGeneral")
+			  );
+		
+			  const carrerasMod = carrerasArray.filter(carreras => carreras.modo == modo);
+		
+			  if (carrerasMod) {
+				const carrerasSedes = carrerasMod.filter(
+				  carreras => carreras.provincias.filter(provincia => provincia.id_sede == sede).length > 0
+				)
+		
+				$.each(carrerasSedes, function(j, valor) {
+				  $("#cbx_carrera").append(
+					`<option value="${valor.codcar}">${valor.nombre_carrera}</option>`
+				  );
+				})
+		
+				if (carrerasSedes.length == 1) {
+				  $("#cbx_carrera").val($("#cbx_carrera option:eq(1)").val());
+				}
+			  }
+			}
+		
+			function check() {
+			  if (
+				document.getElementsByName("tel")[0].value.length +
+				document.getElementsByName("cod_area")[0].value.length >
+				1 &&
+				document.getElementsByName("tel")[0].value.length +
+				document.getElementsByName("cod_area")[0].value.length <
+				10
+			  ) {
+				document
+				  .getElementsByName("tel")[0]
+				  .setCustomValidity("Escribe Telefono y Codigo de Area");
+			  } else {
+				document.getElementsByName("tel")[0].setCustomValidity("");
+			  }
+			}
+		</script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	</body>
 </html>
 <style is:global>
@@ -36,4 +324,465 @@ const { title } = Astro.props;
 		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
 			Bitstream Vera Sans Mono, Courier New, monospace;
 	}
+	@font-face {
+    font-family: "Museo Sans";
+    font-style: normal;
+    font-weight: 500;
+    src: local("Museo Sans"), url("/fonts/MuseoSans_500.otf") format("truetype");
+  }
+
+  @font-face {
+    font-family: "Museo Sans";
+    font-style: normal;
+    font-weight: 700;
+    src: local("Museo Sans"), url("/fonts/MuseoSans_700.otf") format("truetype");
+  }
+
+  @font-face {
+    font-family: "Museo Sans";
+    font-style: normal;
+    font-weight: 900;
+    src: local("Museo Sans"), url("/fonts/MuseoSans_900.otf") format("truetype");
+  }
+
+  @font-face {
+    font-family: "Museo Sans";
+    font-style: normal;
+    font-weight: 300;
+    src: local("Museo Sans"), url("/fonts/MuseoSans-300.otf") format("truetype");
+  }
+
+  @font-face {
+    font-family: "Museo Sans 900";
+    font-style: normal;
+    font-weight: 300;
+    src: local("Museo Sans"), url("/fonts/MuseoSans_900.otf") format("truetype");
+  }
+
+  @font-face {
+    font-family: "Museo Sans 500";
+    font-style: normal;
+    font-weight: 300;
+    src: local("Museo Sans"), url("/fonts/MuseoSans_500.otf") format("truetype");
+  }
+    /* CAPTION */
+    .boton-gris {
+      cursor: pointer;
+      background-color: #616161;
+      color: var(--blanco_ucasal);
+      padding: 5px 3em;
+      border: none;
+      font-size: 1.6em;
+      font-weight: 700;
+      font-family: "Museo Sans";
+    }
+
+    .boton-rojo {
+      cursor: pointer;
+      background-color: #ee1818;
+      color: var(--blanco_ucasal);
+      padding: 5px 3em;
+      border: none;
+      font-size: 1.6em;
+      font-weight: 700;
+      font-family: "Museo Sans";
+    }
+
+    .tarjetita {
+      position: relative;
+    }
+
+    figcaption {
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      text-align: center;
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+      -moz-transition: -moz-transform 0.3s, opacity 0.3s;
+      transition: transform 0.3s, opacity 0.3s;
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 20px;
+      background: white;
+      color: #00427f;
+      -webkit-box-shadow: 21px 21px 47px 0px rgba(0, 0, 0, 0.4);
+      -moz-box-shadow: 21px 21px 47px 0px rgba(0, 0, 0, 0.4);
+      box-shadow: 21px 21px 47px 0px rgba(0, 0, 0, 0.4);
+      display: table;
+    }
+
+    figcaption h4 {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .tarjetita:hover figcaption {
+      opacity: 1;
+      transform: translate(15px, 15px);
+    }
+
+    /* FIN */
+
+    .peso900 {
+      font-weight: 900;
+    }
+
+    .peso700 {
+      font-weight: 700;
+    }
+
+    .peso500 {
+      font-weight: 500;
+    }
+
+    .peso300 {
+      font-weight: 300;
+    }
+
+    .porque_post {
+      width: 55%;
+    }
+
+    body,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: "Museo Sans" !important;
+    }
+
+    .banner-row {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 40vw;
+    }
+
+    #banner {
+      max-height: 80vh;
+      /* width: 85vw; */
+      object-position: top;
+      object-fit: cover;
+    }
+
+
+    .letra_roja {
+      color: #d61a20;
+    }
+
+    .letra_azul {
+      color: #00427f;
+    }
+
+    .icono {
+      height: 5vh;
+      width: auto;
+    }
+
+    .icono_dist {
+      height: 7vh;
+      width: auto;
+    }
+
+    .icono_flecha {
+      height: 3vh;
+      width: auto;
+    }
+
+    .fondo_nuevo {
+      background-color: #ee1818;
+      color: white;
+    }
+
+    .fondo_rojo {
+      background-color: #d61a20;
+      color: white;
+    }
+
+    .ficha_dist {
+      position: relative;
+    }
+
+    .contenedor_rojo {
+      padding-top: 8vh;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .espacio {
+      height: 6vh;
+    }
+
+    .circulo {
+      position: absolute;
+      width: 15vh;
+      left: calc(50% - (15vh / 2));
+      top: 0;
+    }
+
+    .nombre_postgrado_dist {
+      min-height: 20vh;
+    }
+
+    .letras_espaciadas {
+      letter-spacing: 3px;
+    }
+
+    .alinear_nom_post {
+      display: table;
+      height: 100%;
+    }
+
+    .alinear_nom_post p {
+      display: table-cell;
+      vertical-align: middle;
+      font-size: 1.2rem;
+    }
+
+    .container {
+      max-width: 85%;
+    }
+
+    .imagen_testimonial {
+      max-width: 20vw;
+      height: auto;
+      border-radius: 50%;
+    }
+
+    .ahora_dist {
+      width: 94%;
+    }
+
+    .btn_azul,
+    .btn_azul:focus,
+    .btn_azul:hover,
+    .btn_azul:active {
+      background-color: #00427f !important;
+      border-color: #00427f !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .flexbox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-style {
+      background-color: #F2F2F2;
+      /* border: 1px solid gray; */
+      -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+      border-radius: 10px;
+      padding: 1em 2em;
+      opacity: 1;
+    }
+
+    .input-style {
+      /* background-color: #D2D2D2 !important; */
+      border-bottom: 3px solid #A5ADC3;
+      color: black !important;
+      border-radius: 1px;
+    }
+
+    .input-style::placeholder {
+      color: black;
+      opacity: 1;
+      /* Firefox */
+    }
+
+    .input-style:-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: black;
+    }
+
+    .input-style::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: black;
+    }
+
+    .button-from {
+      background-color: #d63f49;
+      color: white;
+      border-radius: 1px;
+      border: none;
+      border-bottom: 5px solid #b13039;
+      font-weight: 600;
+    }
+
+    .col-md-6,
+    .col-md-12 {
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+    }
+
+    .fondo-azul {
+      background-color: #00427E;
+      color: white;
+    }
+
+    .color-azul {
+      color: #00427E;
+    }
+
+    .text-label-icons {
+      font-weight: 700;
+      font-size: 1.8em;
+      margin: 0 !important;
+      font-family: "Museo Sans";
+      padding-top: 15px;
+    }
+
+    .text-count-icons {
+      font-weight: 900;
+      font-size: 2em;
+      color: #75405F;
+      font-family: 'Museo Sans';
+      display: inline-block;
+    }
+
+    .width-50 {
+      max-width: 50vw;
+    }
+
+    .img-button {
+      height: 35px;
+      width: auto;
+    }
+
+    .separador {
+      background: linear-gradient(0.25turn, #D53237, #1F4D85);
+    }
+
+    .texto-small {
+      font-size: 0.9em;
+    }
+
+    .listado {
+      padding-left: 16px;
+      text-decoration-color: #00427E;
+    }
+
+    .text-white {
+      color: white;
+      font-weight: bold;
+    }
+
+    .no-padding {
+      padding: 0;
+    }
+
+    .no-margin {
+      margin: 0;
+    }
+
+    .agrandar {
+      cursor: pointer;
+      transition: 450ms all;
+      transform-origin: center center;
+      position: relative;
+      font-family: "Museo Sans";
+    }
+
+    .agrandar:hover {
+      transform: scale(1.1);
+      color: #D43032;
+      font-weight: 900;
+    }
+
+    .agrandar:visited {
+      color: #D43032;
+      font-weight: 900;
+    }
+
+    /*************/
+    .slick-prev,
+    .slick-next {
+      top: 35%;
+    }
+
+
+    /*SI O SI DEBO DECLARAR LA ALTURA DEL MAPA*/
+    #map {
+      height: 45vh;
+    }
+
+    .vacio {
+      color: white;
+    }
+
+    /*************/
+
+
+    @keyframes aparecer {
+      0% {
+        opacity: 0;
+        transform: translateY(100px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .ocultar {
+      opacity: 0;
+    }
+
+    .animar {
+      animation: aparecer 0.5s;
+    }
+
+
+    @media (max-width: 991px) {
+      .porque_post {
+        width: unset;
+      }
+
+      .display-3 {
+        font-size: 2rem;
+      }
+
+      .banner-row {
+        position: relative;
+        margin: 0 !important;
+        display: inline;
+        /* width: 100vw; */
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      .ahora_dist {
+        width: 100vw;
+      }
+    }
+
+    /* flag de formulario */
+    .iti__flag {
+      background-image: url("../modulos/intl-tel-input/img/flags.png");
+    }
+
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi) {
+      .iti__flag {
+        background-image: url("../modulos/intl-tel-input/img/flags.png");
+      }
+    }
 </style>
