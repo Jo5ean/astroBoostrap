@@ -10,8 +10,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/svelte": "^3.1.0",
     "astro": "^2.10.1",
-    "jquery": "^3.7.0"
+    "jquery": "^3.7.0",
+    "svelte": "^4.1.2"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.16"
