@@ -1843,7 +1843,6 @@ import Layout from "../layouts/Layout.astro";
     <!-- Grid container -->
   </footer>
   <script>
-    
     var input = document.querySelector("#phone");
     var iti = window.intlTelInput(input);
     iti.setCountry("ar");
@@ -1857,15 +1856,6 @@ import Layout from "../layouts/Layout.astro";
     document.getElementById("phone").value = countryData.dialCode;
     document.getElementById("codigo_pais").innerHTML = countryData.dialCode;
   
-    const scrollToTop = () => {
-      const c = document.documentElement.scrollTop || document.body.scrollTop;
-      if (c > 0) {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-      }
-    };
     /**********************/
     $(document).ready(function() {
   
@@ -1944,72 +1934,6 @@ import Layout from "../layouts/Layout.astro";
       interval: 1000,
       })
     });
-  
-  
-    function cambiar_modo() {
-      var modo = $("#modo").val()
-  
-      $("#cbx_provincia").empty();
-      $("#cbx_sede").empty();
-      $("#cbx_carrera").empty();
-  
-      $("#cbx_provincia").append(
-      '<option value="" selected>Seleccione Provincia</option>'
-      );
-  
-      $("#cbx_sede").append(
-      '<option value="" selected>Seleccione Sede</option>'
-      );
-  
-      $("#cbx_carrera").append(
-      '<option value="" selected>Seleccione Carrera</option>'
-      );
-  
-      var carrerasArray = JSON.parse(
-      window.localStorage.getItem("CarrerasModGeneral")
-      );
-      
-      console.log("Carreras", carrerasJson);
-      console.log("CarrerasJson", CarrerasModGeneral);
-  
-      console.log("Modo", modo);
-  
-      const carrerasMod = carrerasArray.filter(carreras => carreras.modo == modo);
-  
-      console.log(carrerasMod);
-  
-      if (carrerasMod) {
-      //listado de id provincias para poner solo una en el combo
-      var list_prov_id = [];
-      var listaProvincia = [];
-      //ciclo por todas las carreras
-      $.each(carrerasMod, function(i, valorCarrera) {
-        var provincias = valorCarrera.provincias;
-        // Saco las provincias sin duplicados. 
-        $.each(provincias, function(j, valor) {
-        if (!list_prov_id.includes(valor.id_provincia)) {
-          list_prov_id.push(valor.id_provincia); //agrego al listado para no tomar repetidos
-          listaProvincia.push(valor); //guardo el objeto provincias para ordenarlo
-        }
-        })
-      })
-  
-      //Ordeno alfabeticamente las provincias
-      listaProvincia.sort(
-        (a, b) => a.nombre_provincia.localeCompare(b.nombre_provincia));
-  
-      $.each(listaProvincia, function(j, valor) {
-        $("#cbx_provincia").append(
-        `<option value="${valor.id_provincia}">${valor.nombre_provincia}</option>`
-        );
-      })
-  
-      if (listaProvincia.length == 1) {
-        $("#cbx_provincia").val($("#cbx_provincia option:eq(1)").val());
-        cambiar_provincia();
-      }
-      }
-    }
   
     function cambiar_provincia() {
       var provincia = $("#cbx_provincia").val();

@@ -18,31 +18,8 @@ const { title } = Astro.props;
 		<link rel="stylesheet" href="https://www.ucasal.edu.ar/landing/img/img-test/estilos/estilo-test.css" />
 	</head>
 	<body>
-		<slot />
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 		<script>
-			var input = document.querySelector("#phone");
-			var iti = window.intlTelInput(input);
-			iti.setCountry("ar");
-			input.addEventListener("countrychange", function() {
-			  var countryData = iti.getSelectedCountryData();
-			  document.getElementById("phone").value = countryData.dialCode;
-			  document.getElementById("codigo_pais").innerHTML = countryData.dialCode;
-			});
-		
-			var countryData = iti.getSelectedCountryData();
-			document.getElementById("phone").value = countryData.dialCode;
-			document.getElementById("codigo_pais").innerHTML = countryData.dialCode;
-		
-			const scrollToTop = () => {
-			  const c = document.documentElement.scrollTop || document.body.scrollTop;
-			  if (c > 0) {
-				window.scrollTo({
-				  top: 0,
-				  behavior: 'smooth'
-				});
-			  }
-			};
 			/**********************/
 			$(document).ready(function() {
 		
@@ -81,23 +58,7 @@ const { title } = Astro.props;
 				]
 			  });
 		
-		
-			  // funcion asincrona anonima autoejecutable c:
-			  (async () => {
-				const resp = await fetch(
-				  `https://www.ucasal.edu.ar/landing/consultas/getCarrerasJson.php?tipcar=Grado,Pregrado,Intermedio`
-				);
-				const data = await resp.json();
-		
-				//guardo el listado en un almacenamiento local
-				window.localStorage.setItem(
-				  "CarrerasModGeneral",
-				  JSON.stringify(data)
-				);
-			  })();
-		
-		
-			  $('.slick-rectores').slick({
+			   $('.slick-rectores').slick({
 				slidesToShow: 1,
 				slidesToScroll: 1,
 				touchMove: false,
@@ -134,7 +95,7 @@ const { title } = Astro.props;
 			  $('.carusel_10').carousel({
 				interval: 1000,
 			  })
-			});
+			}); 
 		
 		
 			function cambiar_modo() {
@@ -165,7 +126,7 @@ const { title } = Astro.props;
 		
 			  const carrerasMod = carrerasArray.filter(carreras => carreras.modo == modo);
 		
-			  console.log(carrerasMod);
+			  console.log("CarrerasMod", carrerasMod);
 		
 			  if (carrerasMod) {
 				//listado de id provincias para poner solo una en el combo
@@ -306,6 +267,99 @@ const { title } = Astro.props;
 			}
 		</script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+            //Banner principal
+            let count = 0;
+      let messages = [
+        "¡Ya casi empezamos! 🏃🏽",
+        "Inscripción en 3 pasos 👌",
+        "😎 Arrancá el 2023 con todo "
+      ];
+      //Cuando cargue el zocalo tenga el ultico (con el que comienza)
+      //Despues sigue con los del array
+      let cantidad = messages.length;
+      document.getElementById("messages").innerText = messages[messages.length - 1]
+      let messageText = "";
+      setInterval(function() {
+        if (count == cantidad) {
+          count = 0;
+          messageText = messages[count];
+        } else {
+          messageText = messages[count];
+          count++;
+        }
+        document.getElementById("messages").classList.add("hide-text");
+        document.getElementById("messages").innerText = messageText;
+        document.getElementById("messages").classList.remove("hide-text");
+      }, 3000);
+
+    </script>
+<script>
+  // Carreras
+  let CarrerasModGeneral = [];
+
+  // Función asincrónica autoejecutable
+  (async () => {
+    try {
+      const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; // Proxy CORS
+      const apiUrl = `https://www.ucasal.edu.ar/landing/consultas/getCarrerasJson.php?tipcar=Grado,Pregrado,Intermedio`;
+      
+      const resp = await fetch(proxyUrl + apiUrl);
+      const data = await resp.json();
+
+      // Guardo el listado en un almacenamiento local
+      localStorage.setItem("CarrerasModGeneral", JSON.stringify(data));
+      CarrerasModGeneral = data; // Actualizo la variable local
+      console.log("CarrerasModGeneral", CarrerasModGeneral);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  })();
+</script>
+<script>
+  function cambiar_modo() {
+  const modo = $("#modo").val();
+
+  $("#cbx_provincia, #cbx_sede, #cbx_carrera").empty();
+
+  const carrerasArray = JSON.parse(localStorage.getItem("CarrerasModGeneral"));
+
+  console.log("Carreras", carrerasArray);
+  console.log("Modo", modo);
+
+  const carrerasMod = carrerasArray.filter(carreras => carreras.modo === modo);
+
+  console.log(carrerasMod);
+
+  if (carrerasMod.length) {
+    const list_prov_id = [];
+    const listaProvincia = [];
+
+    carrerasMod.forEach(valorCarrera => {
+      const provincias = valorCarrera.provincias;
+
+      provincias.forEach(valor => {
+        if (!list_prov_id.includes(valor.id_provincia)) {
+          list_prov_id.push(valor.id_provincia);
+          listaProvincia.push(valor);
+        }
+      });
+    });
+
+    listaProvincia.sort((a, b) => a.nombre_provincia.localeCompare(b.nombre_provincia));
+
+    listaProvincia.forEach(valor => {
+      $("#cbx_provincia").append(`<option value="${valor.id_provincia}">${valor.nombre_provincia}</option>`);
+    });
+
+    if (listaProvincia.length === 1) {
+      $("#cbx_provincia").val($("#cbx_provincia option:eq(1)").val());
+      cambiar_provincia();
+    }
+  }
+}
+</script>
+		<slot />
 	</body>
 </html>
 <style is:global>
