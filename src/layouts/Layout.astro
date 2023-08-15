@@ -316,49 +316,7 @@ const { title } = Astro.props;
     }
   })();
 </script>
-<script>
-  function cambiar_modo() {
-  const modo = $("#modo").val();
 
-  $("#cbx_provincia, #cbx_sede, #cbx_carrera").empty();
-
-  const carrerasArray = JSON.parse(localStorage.getItem("CarrerasModGeneral"));
-
-  console.log("Carreras", carrerasArray);
-  console.log("Modo", modo);
-
-  const carrerasMod = carrerasArray.filter(carreras => carreras.modo === modo);
-
-  console.log(carrerasMod);
-
-  if (carrerasMod.length) {
-    const list_prov_id = [];
-    const listaProvincia = [];
-
-    carrerasMod.forEach(valorCarrera => {
-      const provincias = valorCarrera.provincias;
-
-      provincias.forEach(valor => {
-        if (!list_prov_id.includes(valor.id_provincia)) {
-          list_prov_id.push(valor.id_provincia);
-          listaProvincia.push(valor);
-        }
-      });
-    });
-
-    listaProvincia.sort((a, b) => a.nombre_provincia.localeCompare(b.nombre_provincia));
-
-    listaProvincia.forEach(valor => {
-      $("#cbx_provincia").append(`<option value="${valor.id_provincia}">${valor.nombre_provincia}</option>`);
-    });
-
-    if (listaProvincia.length === 1) {
-      $("#cbx_provincia").val($("#cbx_provincia option:eq(1)").val());
-      cambiar_provincia();
-    }
-  }
-}
-</script>
 		<slot />
 	</body>
 </html>
