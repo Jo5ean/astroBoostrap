@@ -16,6 +16,7 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<link rel="stylesheet" href="https://www.ucasal.edu.ar/landing/img/img-test/estilos/estilo-test.css" />
+    <!-- <link rel="stylesheet" href="https://www.ucasal.edu.ar/landing/img/img-test/estilos/proStylesAugust.css" /> -->
 	</head>
 	<body>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
@@ -267,56 +268,6 @@ const { title } = Astro.props;
 			}
 		</script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script>
-            //Banner principal
-            let count = 0;
-      let messages = [
-        "¡Ya casi empezamos! 🏃🏽",
-        "Inscripción en 3 pasos 👌",
-        "😎 Arrancá el 2023 con todo "
-      ];
-      //Cuando cargue el zocalo tenga el ultico (con el que comienza)
-      //Despues sigue con los del array
-      let cantidad = messages.length;
-      document.getElementById("messages").innerText = messages[messages.length - 1]
-      let messageText = "";
-      setInterval(function() {
-        if (count == cantidad) {
-          count = 0;
-          messageText = messages[count];
-        } else {
-          messageText = messages[count];
-          count++;
-        }
-        document.getElementById("messages").classList.add("hide-text");
-        document.getElementById("messages").innerText = messageText;
-        document.getElementById("messages").classList.remove("hide-text");
-      }, 3000);
-
-    </script>
-<script>
-  // Carreras
-  let CarrerasModGeneral = [];
-
-  // Función asincrónica autoejecutable
-  (async () => {
-    try {
-      const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; // Proxy CORS
-      const apiUrl = `https://www.ucasal.edu.ar/landing/consultas/getCarrerasJson.php?tipcar=Grado,Pregrado,Intermedio`;
-      
-      const resp = await fetch(proxyUrl + apiUrl);
-      const data = await resp.json();
-
-      // Guardo el listado en un almacenamiento local
-      localStorage.setItem("CarrerasModGeneral", JSON.stringify(data));
-      CarrerasModGeneral = data; // Actualizo la variable local
-      console.log("CarrerasModGeneral", CarrerasModGeneral);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  })();
-</script>
-
 		<slot />
 	</body>
 </html>
